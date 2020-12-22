@@ -20,15 +20,15 @@ function preload() {
 
 function setup() {
 
-  createCanvas(400, 400);
+  createCanvas(windowWidth, windowHeight);
 
-  backgroundSprite = createSprite(width / 2, 200, 400, 400);
+  backgroundSprite = createSprite(width/2, height/2, width, height);
   backgroundSprite.addImage("bg", backgroundImage);
 
-  ground = createSprite(400, 390, 800, 20);
+  ground = createSprite(width/2,height-10,width,10);
   ground.visible = false;
 
-  monkey = createSprite(75, 325, 10, 10);
+  monkey = createSprite(75, height-10, 10, 10);
   monkey.addAnimation("stopped", monkeyStopped);
   monkey.addAnimation("monkey_running", monkeyAnimation);
   monkey.scale = 0.12;
@@ -37,7 +37,7 @@ function setup() {
   monkey.setCollider("circle", 0, 10, 300);
 
   fill("green")
-  restart = createSprite(200, 150, 175, 30);
+  restart = createSprite(width/2, height/2, 175, 30);
   restart.visible = false;
 
   bananaGroup = new Group();
@@ -57,12 +57,12 @@ function draw() {
 
     //ground scrolling effect
     backgroundSprite.velocityX = -5;
-    if (backgroundSprite.x < 0) {
+    if (backgroundSprite.x <= width - backgroundSprite.width/2) {
       backgroundSprite.x = width / 2;
     }
 
     //monkey jumps when space is pressed
-    if (keyWentDown("SPACE") && monkey.y > 250) {
+    if (keyWentDown("SPACE") && monkey.y > height - 200) {
       monkey.velocityY = -5;
     }
 
@@ -115,14 +115,14 @@ function draw() {
     textSize(40);
     strokeWeight(5);
     stroke("white");
-    text("GAMEOVER", 75, 120);
+    text("GAMEOVER", width/2-120, 120);
 
     restart.visible = true;
     fill("grey");
     textSize(15);
     strokeWeight(3);
     stroke("white");
-    text("PRESS TO RESTART", 130, 155);
+    text("PRESS TO RESTART", (width/2-restart.width/2), restart.y);
 
     if (mousePressedOver(restart)) {
       reset();
@@ -133,7 +133,7 @@ function draw() {
   fill("black");
   textSize(20);
   noStroke();
-  text("Score: " + score, 10, 20);
+  text("Score: " + score, 30, 30);
 
 }
 
@@ -152,7 +152,7 @@ function drawBanana() {
     banana = createSprite(400, 200, 10, 10);
     banana.addAnimation("banana", bananaImage);
     banana.scale = 0.08;
-    banana.y = random(150, 230);
+    banana.y = random(ground.y-200, ground.y-100);
     banana.velocityX = -3;
     banana.lifetime = 130;
     banana.setCollider("circle", 0, 10, 400);
@@ -164,7 +164,7 @@ function drawBanana() {
 
 function drawObstacle() {
   if (frameCount % 100 === 0) {
-    obstacle = createSprite(400, 360, 10, 10);
+    obstacle = createSprite(width, ground.y-35, 10, 10);
     obstacle.addAnimation("obstacle", obstacleImage);
     obstacle.scale = 0.15;
     obstacle.velocityX = -5;
